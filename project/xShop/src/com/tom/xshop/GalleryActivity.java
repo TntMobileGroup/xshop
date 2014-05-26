@@ -13,6 +13,7 @@ import com.tom.xshop.util.PrefUtil;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
@@ -75,7 +76,23 @@ public class GalleryActivity extends FragmentActivity {
         createSlidingUI();
         MessageManager.getInstance().initialize(this.getApplicationContext());
         tryToFocus();
+        
+        this.getActionBar().setLogo(R.drawable.icon_main_menu);
+        this.getActionBar().setTitle(R.string.customer_name);
+        this.getActionBar().setHomeButtonEnabled(true);
+        this.getActionBar().setBackgroundDrawable(this.getResources().getDrawable(R.drawable.actionbar_bkg));
     }
+    
+    
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			toggleNavigationPanel();
+			break;
+		}
+		return super.onOptionsItemSelected(item);
+	}
     
     private String curGoodsUUID = "";
     private void tryToFocus()
@@ -111,9 +128,9 @@ public class GalleryActivity extends FragmentActivity {
     private void setWindowStyle() {
         requestWindowFeature(Window.FEATURE_PROGRESS);
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
-        getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
-        getWindow().requestFeature(Window.FEATURE_NO_TITLE);
-        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        //getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+        //getWindow().requestFeature(Window.FEATURE_NO_TITLE);
+        //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         getWindow().setFlags(WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED,
                 WindowManager.LayoutParams.FLAG_HARDWARE_ACCELERATED);

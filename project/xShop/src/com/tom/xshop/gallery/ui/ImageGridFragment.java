@@ -117,6 +117,7 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
 
         final View v = inflater.inflate(R.layout.image_grid_fragment, container, false);
         final GridView mGridView = (GridView) v.findViewById(R.id.gridView);
+        mGridView.setBackgroundResource(R.drawable.gridview_bkg);
         mGridView.setAdapter(mAdapter);
         mGridView.setOnItemClickListener(this);
         mGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
@@ -151,7 +152,7 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
                                 final int columnWidth =
                                         (mGridView.getWidth() / numColumns) - mImageThumbSpacing;
                                 mAdapter.setNumColumns(numColumns);
-                                mAdapter.setItemHeight(columnWidth);
+                                mAdapter.setItemHeight((int)(columnWidth * 1.5f));
                                 if (BuildConfig.DEBUG) {
                                     Log.d(TAG, "onCreateView - numColumns set to " + numColumns);
                                 }

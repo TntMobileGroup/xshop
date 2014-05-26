@@ -17,6 +17,9 @@
 
 <resources>
 
+    <drawable name="actionbar_bkg">#fff9f9f9</drawable>
+    <drawable name="gridview_bkg">#fff3f3f3</drawable>
+    <drawable name="gridview_scrollbarthumb">#00000000</drawable>
     <color name="grid_state_pressed">#BB7dbcd3</color>
     <color name="grid_state_focused">#777dbcd3</color>
 

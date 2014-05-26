@@ -1,5 +1,7 @@
 package com.tom.xshop.gallery.ui;
 
+
+
 import com.tom.xshop.R;
 import com.tom.xshop.data.GlobalData;
 import com.tom.xshop.data.GoodsItem;
@@ -8,24 +10,33 @@ import com.tom.xshop.util.UIConfig;
 
 import android.content.Context;
 import android.graphics.Color;
+
+import android.support.v4.view.PagerAdapter;
+import android.support.v4.view.ViewPager;
 import android.text.TextUtils.TruncateAt;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class GoodsItemView extends RelativeLayout {
-    private RecyclingImageView mThumbImageView = null;
+public class GoodsItemDetailView extends LinearLayout {
+	
+	
+	private ViewPager mItemImages = null;
     private RelativeLayout mBottomPanel = null;
     private TextView mMessageTextView = null;
     private TextView mNameTextView = null;
     private TextView mBrandModelTextView = null;
     private ImageView mLikeImageView = null;
+    
 
     private GoodsItem mData = null;
 
-    public GoodsItemView(Context context) {
+    public GoodsItemDetailView(Context context) {
         super(context);
+        this.setOrientation(LinearLayout.VERTICAL);
+        
         createUI(context);
         addListener();
     }
@@ -39,24 +50,41 @@ public class GoodsItemView extends RelativeLayout {
     {
         //this.setBackgroundColor(Color.GREEN);
     	this.setBackgroundResource(R.drawable.popup_list_bg);
-    	//int padding = getResources().getDimensionPixelSize(R.dimen.gridview_item_padding);
-    	//this.setPadding(padding, padding, padding, padding);
+    	
+        int pmargin = DensityAdaptor.getDensityIndependentValue(5);
+        this.setPadding(pmargin, pmargin, pmargin, pmargin);
+
+        int width = DensityAdaptor.getScreenWidth();
+        int height = DensityAdaptor.getScreenHeight();
+        int expWidth = height < width ? height : width;
+        mItemImages = new ViewPager(this.getContext());
+        
+        LinearLayout.LayoutParams imageLP = new LinearLayout.LayoutParams(expWidth,
+        		expWidth *2 /3);
+        imageLP.setMargins(pmargin, pmargin, pmargin, pmargin);
+        this.addView(mItemImages, imageLP);
+        
+
         int margin = DensityAdaptor.getDensityIndependentValue(5);
-        mThumbImageView = new RecyclingImageView(context);
-        mThumbImageView.setScaleType(ImageView.ScaleType.FIT_XY);
-//        RelativeLayout.LayoutParams imageLP = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-//                RelativeLayout.LayoutParams.WRAP_CONTENT);
-//        imageLP.setMargins(margin, margin, margin, margin);
-//        this.addView(mThumbImageView, imageLP);
+        ImageView seperator = new ImageView(context);
+        seperator.setImageResource(R.drawable.hori_separator);
+        seperator.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        LinearLayout.LayoutParams lp= new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+        		LinearLayout.LayoutParams.WRAP_CONTENT);
+
+        this.addView(seperator, lp);
         
         mMessageTextView = new TextView(context);
         mMessageTextView.setTextSize(UIConfig.getTitleTextSize());
         mMessageTextView.setTextColor(Color.YELLOW);
         mMessageTextView.setBackgroundColor(Color.RED);
-        RelativeLayout.LayoutParams msgLP = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        LinearLayout.LayoutParams msgLP = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+        		LinearLayout.LayoutParams.WRAP_CONTENT);
         msgLP.setMargins(margin, margin, margin, margin);
+        mMessageTextView.setVisibility(View.GONE);
         this.addView(mMessageTextView, msgLP);
+        
+        
         
         mBottomPanel = new RelativeLayout(context);
         mBottomPanel.setId(1);
@@ -97,28 +125,17 @@ public class GoodsItemView extends RelativeLayout {
         likeLP.rightMargin = margin;
         likeLP.addRule(RelativeLayout.ALIGN_PARENT_RIGHT);
         likeLP.addRule(RelativeLayout.CENTER_VERTICAL);
-        mBottomPanel.addView(mLikeImageView, likeLP);
-        
-        
-        ImageView seperator = new ImageView(context);
-        seperator.setId(2);
-        seperator.setImageResource(R.drawable.hori_separator);
-        seperator.setScaleType(ImageView.ScaleType.FIT_CENTER);
-        RelativeLayout.LayoutParams lp= new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
-        lp.addRule(RelativeLayout.ABOVE, 1);
-        this.addView(seperator, lp);
-        
-        RelativeLayout.LayoutParams imageLP = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
-        imageLP.setMargins(margin, margin, margin, margin);
-        imageLP.addRule(RelativeLayout.ALIGN_PARENT_TOP);
-        imageLP.addRule(RelativeLayout.ABOVE, 2);
-        this.addView(mThumbImageView, imageLP);
+        mBottomPanel.addView(mLikeImageView, likeLP);    
+
     }
     
-    public void setData(GoodsItem data)
+    public void setDataWithAdapter(GoodsItem data, PagerAdapter adapter)
     {
+    	//mItemImages.removeAllViews();
+    	mItemImages.setAdapter(adapter);
+    	mItemImages.requestLayout();
+    	//adapter.notifyDataSetChanged();
+    	
         mData = data;
         mNameTextView.setText(data.getName());
         mBrandModelTextView.setText(data.getBrand() + "/" + data.getModel());
@@ -134,13 +151,15 @@ public class GoodsItemView extends RelativeLayout {
         
         focus(mData.getFocus());
         
+        if(mData.getMessage() != null)
         mMessageTextView.setText(mData.getMessage());
+       
     }
     
-    public RecyclingImageView getImageView()
-    {
-        return mThumbImageView;
-    }
+//    public RecyclingImageView getImageView()
+//    {
+//        return mThumbImageView;
+//    }
     
     private void addListener()
     {
@@ -172,21 +191,6 @@ public class GoodsItemView extends RelativeLayout {
             }
         });
     }
+    
 
-//    private void addListener()
-//    {
-//        GlobalData.getData().setCurCategory(mData.getCategory());
-//        final Intent i = new Intent(this.getContext(), ImageDetailActivity.class);
-//        i.putExtra(ImageDetailActivity.EXTRA_IMAGE, (int) id);
-//        if (Utils.hasJellyBean()) {
-//            // makeThumbnailScaleUpAnimation() looks kind of ugly here as the loading spinner may
-//            // show plus the thumbnail image in GridView is cropped. so using
-//            // makeScaleUpAnimation() instead.
-////            ActivityOptions options =
-////                    ActivityOptions.makeScaleUpAnimation(v, 0, 0, v.getWidth(), v.getHeight());
-//            getActivity().startActivity(i);//, options.toBundle());
-//        } else {
-//            startActivity(i);
-//        }
-//    }
 }

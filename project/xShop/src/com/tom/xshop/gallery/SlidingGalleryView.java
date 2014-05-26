@@ -108,13 +108,14 @@ public class SlidingGalleryView extends RelativeLayout {
 
     private void createUI()
     {
-        this.setBackgroundResource(R.drawable.wood_bk);
-        createTopBanner();
+        //this.setBackgroundResource(R.drawable.wood_bk);
+        //createTopBanner();
+
         
         mViewPager = new ViewPager(this.getContext());
         RelativeLayout.LayoutParams vpLP = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.MATCH_PARENT);
-        vpLP.topMargin = LayoutUtil.getGalleryTopPanelHeight();
+        //vpLP.topMargin = LayoutUtil.getGalleryTopPanelHeight();
         this.addView(mViewPager, vpLP);
         
         
@@ -137,14 +138,14 @@ public class SlidingGalleryView extends RelativeLayout {
     
     private void addListeners()
     {
-        mToggleNavigationPanelBtn.setOnClickListener(new View.OnClickListener() {
-          
-          @Override
-          public void onClick(View v) {
-              // TODO Auto-generated method stub
-              GalleryActivity.getInstance().toggleNavigationPanel();
-          }
-      });
+//        mToggleNavigationPanelBtn.setOnClickListener(new View.OnClickListener() {
+//          
+//          @Override
+//          public void onClick(View v) {
+//              // TODO Auto-generated method stub
+//              GalleryActivity.getInstance().toggleNavigationPanel();
+//          }
+//      });
     }
 
     private void generateFragmentsForData()
@@ -233,9 +234,9 @@ public class SlidingGalleryView extends RelativeLayout {
         Context context = this.getContext();
         
         mPagerTabStrip = new PagerTabStrip(context);
-        mPagerTabStrip.setTabIndicatorColor(Color.WHITE);
-        mPagerTabStrip.setDrawFullUnderline(false);
-        mPagerTabStrip.setBackgroundColor(Color.TRANSPARENT);
+        mPagerTabStrip.setTabIndicatorColor(Color.GREEN);
+        mPagerTabStrip.setDrawFullUnderline(true);
+        mPagerTabStrip.setBackgroundColor(Color.WHITE);
         mPagerTabStrip.setTextSpacing(50);
         
         ViewPager.LayoutParams tabLP = new ViewPager.LayoutParams();

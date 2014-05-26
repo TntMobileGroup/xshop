@@ -13,6 +13,7 @@ import android.os.AsyncTask;
 public class CloudAPIAsyncTask extends AsyncTask<String, Void, String> {
 
     private final static String API_URL = "http://115.28.107.154/xshop/api/admin/api.php?op=";
+    
     private String mOp = "";
 	public interface ICloudAPITaskListener {
 		public void onFinish(int returnCode, String strResult);
