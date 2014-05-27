@@ -2,19 +2,18 @@ package com.tom.xshop.gallery;
 
 import java.util.ArrayList;
 
+
 import com.tom.xshop.GalleryActivity;
 import com.tom.xshop.R;
 import com.tom.xshop.cloud.CloudAPIAsyncTask;
-import com.tom.xshop.config.PrefConfig;
 import com.tom.xshop.data.GlobalData;
+import com.tom.xshop.data.GoodsItem;
 import com.tom.xshop.gallery.ui.ImageGridFragment;
-import com.tom.xshop.ui.control.HaloButton;
+import com.tom.xshop.ui.thirdparty.ViewBadger.BadgeView;
 import com.tom.xshop.util.CacheUtil;
-import com.tom.xshop.util.DensityAdaptor;
 import com.tom.xshop.util.JSONUtil;
 import com.tom.xshop.util.LayoutUtil;
-import com.tom.xshop.util.PrefUtil;
-import com.tom.xshop.util.UIConfig;
+
 
 import android.content.Context;
 import android.graphics.Color;
@@ -25,9 +24,12 @@ import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
+
 
 public class SlidingGalleryView extends RelativeLayout {
     private static final String TAG = "ImageGridActivity";
@@ -37,13 +39,10 @@ public class SlidingGalleryView extends RelativeLayout {
     private ArrayList<String> mCategories = null;
     private int mTestId = 100;
     private int mFavoriteId = 90;
-    private RelativeLayout mTopBanner = null;
-    private HaloButton mToggleNavigationPanelBtn = null;
+    private RelativeLayout mBanner = null;
+    private Button mBannerBtn = null;
+    private BadgeView mBadge = null;
     
-    private View mOverlay = null;
-    private TextView mTopTextView = null;
-    
-    private boolean mInactive = false;
     
     public SlidingGalleryView(Context context) {
         super(context);
@@ -70,40 +69,77 @@ public class SlidingGalleryView extends RelativeLayout {
         }
     }
 
-    private void createTopBanner() {
+//    private void createTopBanner() {
+//        Context context = this.getContext();
+////        int smallMargin = LayoutUtil.getSmallMargin();
+//        int mediumMargin = LayoutUtil.getMediumMargin();
+//        mTopBanner = new RelativeLayout(context);
+//        mTopBanner.setBackgroundResource(R.drawable.hori_bar_wood);
+//        RelativeLayout.LayoutParams topViewLP = new RelativeLayout.LayoutParams(
+//                RelativeLayout.LayoutParams.MATCH_PARENT,
+//                LayoutUtil.getGalleryTopPanelHeight());
+////        topViewLP.height = LayoutUtil.getGalleryTopPanelHeight();
+//        mTopBanner.setLayoutParams(topViewLP);
+//        this.addView(mTopBanner, topViewLP);
+//        
+//        mToggleNavigationPanelBtn = new HaloButton(context, R.drawable.menu);
+////        mToggleNavigationPanelBtn.setBackgroundColor(Color.YELLOW);
+//        RelativeLayout.LayoutParams toggleNaviBtnLP = new RelativeLayout.LayoutParams(
+//                RelativeLayout.LayoutParams.WRAP_CONTENT,
+//                RelativeLayout.LayoutParams.WRAP_CONTENT);
+//        toggleNaviBtnLP.leftMargin = mediumMargin;
+//        toggleNaviBtnLP.width = DensityAdaptor.getDensityIndependentValue(32);
+//        toggleNaviBtnLP.height = DensityAdaptor.getDensityIndependentValue(32);
+//        toggleNaviBtnLP.addRule(RelativeLayout.CENTER_VERTICAL);
+//        mToggleNavigationPanelBtn.setLayoutParams(toggleNaviBtnLP);
+//        mTopBanner.addView(mToggleNavigationPanelBtn);
+//        
+//        mTopTextView = new TextView(context);
+//        mTopTextView.setTextSize(UIConfig.getTitleTextSize());
+//        mTopTextView.setText("[Shop Name Here]");
+//        mTopTextView.setTextColor(UIConfig.getLightTextColor());
+//        RelativeLayout.LayoutParams topTextBtnLP = new RelativeLayout.LayoutParams(
+//                RelativeLayout.LayoutParams.WRAP_CONTENT,
+//                RelativeLayout.LayoutParams.WRAP_CONTENT);
+//        topTextBtnLP.addRule(RelativeLayout.CENTER_IN_PARENT);
+//        mTopBanner.addView(mTopTextView, topTextBtnLP);
+//    }
+//    
+    
+    private void createBottomBanner() {
         Context context = this.getContext();
-//        int smallMargin = LayoutUtil.getSmallMargin();
-        int mediumMargin = LayoutUtil.getMediumMargin();
-        mTopBanner = new RelativeLayout(context);
-        mTopBanner.setBackgroundResource(R.drawable.hori_bar_wood);
+        mBanner = new RelativeLayout(context);
         RelativeLayout.LayoutParams topViewLP = new RelativeLayout.LayoutParams(
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 LayoutUtil.getGalleryTopPanelHeight());
-//        topViewLP.height = LayoutUtil.getGalleryTopPanelHeight();
-        mTopBanner.setLayoutParams(topViewLP);
-        this.addView(mTopBanner, topViewLP);
+        topViewLP.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+
+        this.addView(mBanner, topViewLP);
         
-        mToggleNavigationPanelBtn = new HaloButton(context, R.drawable.menu);
-//        mToggleNavigationPanelBtn.setBackgroundColor(Color.YELLOW);
+        mBannerBtn = new Button(context);
+        mBannerBtn.setText(R.string.gouwuche);
+        mBannerBtn.setBackgroundResource(R.drawable.wood_bk);
+        mBannerBtn.setAlpha(0.8f);
         RelativeLayout.LayoutParams toggleNaviBtnLP = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
-        toggleNaviBtnLP.leftMargin = mediumMargin;
-        toggleNaviBtnLP.width = DensityAdaptor.getDensityIndependentValue(32);
-        toggleNaviBtnLP.height = DensityAdaptor.getDensityIndependentValue(32);
-        toggleNaviBtnLP.addRule(RelativeLayout.CENTER_VERTICAL);
-        mToggleNavigationPanelBtn.setLayoutParams(toggleNaviBtnLP);
-        mTopBanner.addView(mToggleNavigationPanelBtn);
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT);
         
-        mTopTextView = new TextView(context);
-        mTopTextView.setTextSize(UIConfig.getTitleTextSize());
-        mTopTextView.setText("[Shop Name Here]");
-        mTopTextView.setTextColor(UIConfig.getLightTextColor());
-        RelativeLayout.LayoutParams topTextBtnLP = new RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.WRAP_CONTENT,
-                RelativeLayout.LayoutParams.WRAP_CONTENT);
-        topTextBtnLP.addRule(RelativeLayout.CENTER_IN_PARENT);
-        mTopBanner.addView(mTopTextView, topTextBtnLP);
+        mBanner.addView(mBannerBtn, toggleNaviBtnLP);
+        
+        mBadge = new BadgeView(context, mBannerBtn);
+        mBadge.setText("0");
+//        mBadge.setOnClickListener(new OnClickListener() {
+//			@Override
+//			public void onClick(View v) {
+//				if (mBadge.isShown()) {
+//					mBadge.increment(1);
+//				} else {
+//					mBadge.show();
+//				}
+//			}
+//		});
+        
+      
     }
 
     private void createUI()
@@ -118,7 +154,7 @@ public class SlidingGalleryView extends RelativeLayout {
         //vpLP.topMargin = LayoutUtil.getGalleryTopPanelHeight();
         this.addView(mViewPager, vpLP);
         
-        
+        createBottomBanner();
 //        mOverlay = new View(this.getContext());
 //        RelativeLayout.LayoutParams overlayLP = new RelativeLayout.LayoutParams(
 //                RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -170,6 +206,8 @@ public class SlidingGalleryView extends RelativeLayout {
                 JSONUtil.parseGoodsListInfo(strResult);
                 //---------------------------------------------------------------
                 generateFragmentsForData();
+                
+                updateBannerStatus();
             }
         });
         task.execute();
@@ -281,10 +319,53 @@ public class SlidingGalleryView extends RelativeLayout {
         {
             JSONUtil.parseGoodsListInfo(visitedData);
             generateFragmentsForData();
+            
+            updateBannerStatus();
         }
         else
         {
             getFromCloud();
         }
     }
+    
+    
+    public void updateBannerStatus() {
+    	// update Banner visibility when start up
+    	// if like goods is empty, then hide it.
+    	// if not , then show banner
+    	ArrayList<GoodsItem> list = GlobalData.getData().getGoodsListByCategory(GlobalData.FavoriteCategory);
+    	int count = list.size(); // need improve
+    	if(count <= 0) {
+    		mBadge.hide();
+    		showBanner(false, false);
+    	} else {
+    		mBadge.setText(Integer.toString(count));
+    		mBadge.show();
+    		showBanner(true, false);
+    	}
+    }
+    
+    
+	public void showBanner(boolean show, boolean withAnim) {
+		if (show) {
+			if (withAnim) {
+				Animation anim = AnimationUtils.loadAnimation(
+						this.getContext(), R.anim.push_up_in);
+				anim.setFillAfter(true);
+				mBanner.startAnimation(anim);
+			} else {
+				mBanner.setVisibility(View.VISIBLE);
+			}
+			
+		} else {
+			if (withAnim) {
+				Animation anim = AnimationUtils.loadAnimation(
+						this.getContext(), R.anim.push_up_out);
+				anim.setFillAfter(true);
+				mBanner.startAnimation(anim);
+			} else {
+				mBanner.setVisibility(View.INVISIBLE);
+			}
+		}
+	}
 }
