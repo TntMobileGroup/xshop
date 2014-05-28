@@ -3,16 +3,19 @@ package com.tom.xshop.gallery;
 import java.util.ArrayList;
 
 
+
 import com.tom.xshop.GalleryActivity;
 import com.tom.xshop.R;
 import com.tom.xshop.cloud.CloudAPIAsyncTask;
 import com.tom.xshop.data.GlobalData;
+import com.tom.xshop.data.GoodsDataChangeListener;
 import com.tom.xshop.data.GoodsItem;
 import com.tom.xshop.gallery.ui.ImageGridFragment;
 import com.tom.xshop.ui.thirdparty.ViewBadger.BadgeView;
 import com.tom.xshop.util.CacheUtil;
 import com.tom.xshop.util.JSONUtil;
 import com.tom.xshop.util.LayoutUtil;
+
 
 
 import android.content.Context;
@@ -174,14 +177,15 @@ public class SlidingGalleryView extends RelativeLayout {
     
     private void addListeners()
     {
-//        mToggleNavigationPanelBtn.setOnClickListener(new View.OnClickListener() {
-//          
-//          @Override
-//          public void onClick(View v) {
-//              // TODO Auto-generated method stub
-//              GalleryActivity.getInstance().toggleNavigationPanel();
-//          }
-//      });
+    	GlobalData.getData().setFavorGoodsDataChangeListener(new GoodsDataChangeListener() {
+
+			@Override
+			public void notifyDataSetChanged() {
+				updateBannerStatus();
+			}
+    		
+    	});
+
     }
 
     private void generateFragmentsForData()

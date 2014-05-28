@@ -16,6 +16,7 @@ public class GlobalData {
     private static GlobalData _instance = null;
     
     private ArrayList<GoodsItem> mLikedGoodsList = null;
+    private GoodsDataChangeListener mLikedGoodsListener = null;
 
     public static GlobalData getData()
     {
@@ -99,6 +100,14 @@ public class GlobalData {
         {
             CacheUtil.cache(CacheUtil.Key_liked, data);
         }
+        
+        if(mLikedGoodsListener != null) {
+        	mLikedGoodsListener.notifyDataSetChanged();
+        }
+    }
+    
+    public void setFavorGoodsDataChangeListener(GoodsDataChangeListener listener) {
+    	mLikedGoodsListener = listener;
     }
     
     public String getCategoryByGoods(String uuid)
@@ -127,7 +136,7 @@ public class GlobalData {
     
     public ArrayList<GoodsItem> getLikedList()
     {
-        return mStructuredData.get(FavoriteCategory);
+        return getGoodsListByCategory(FavoriteCategory);
     }
     
 //    public String getFavoriteData()
