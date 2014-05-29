@@ -8,6 +8,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+
 import com.igexin.sdk.Consts;
 import com.tom.xshop.config.PrefConfig;
 import com.tom.xshop.util.NotificationUtil;
@@ -42,8 +43,8 @@ public class GexinSdkMsgReceiver extends BroadcastReceiver {
                             return;
                         }
                         String versionStr = tokens.nextToken();
-                        int version = Integer.parseInt(versionStr);
-                        if (version > 0)
+                        double version = Double.parseDouble(versionStr);
+                        if (version < 1.0)
                         {
                             return;
                         }
