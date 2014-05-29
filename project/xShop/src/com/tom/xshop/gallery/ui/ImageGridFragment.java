@@ -69,6 +69,8 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
     
     private String mCategory = "";
     private ArrayList<GoodsItem> mGoodsList = null;
+    
+    private OnScrollStateChangedListener mScrollListener = null;
 
     public static void updateFavoriteAdaptor()
     {
@@ -129,6 +131,9 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
                 } else {
                     mImageFetcher.setPauseWork(false);
                 }
+                
+                if(mScrollListener != null)
+                	mScrollListener.onScrollStateChanged(absListView, scrollState);
             }
 
             @Override
@@ -200,6 +205,11 @@ public class ImageGridFragment extends Fragment implements AdapterView.OnItemCli
         } else {
             startActivity(i);
         }
+    }
+    
+    
+    public void setOnScrollStateChangedListener(OnScrollStateChangedListener listener) {
+    	mScrollListener = listener;
     }
 
 //    @Override

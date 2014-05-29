@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 
 
+
+
+
 import com.tom.xshop.GalleryActivity;
 import com.tom.xshop.R;
 import com.tom.xshop.cloud.CloudAPIAsyncTask;
@@ -11,10 +14,14 @@ import com.tom.xshop.data.GlobalData;
 import com.tom.xshop.data.GoodsDataChangeListener;
 import com.tom.xshop.data.GoodsItem;
 import com.tom.xshop.gallery.ui.ImageGridFragment;
+import com.tom.xshop.gallery.ui.OnScrollStateChangedListener;
 import com.tom.xshop.ui.thirdparty.ViewBadger.BadgeView;
 import com.tom.xshop.util.CacheUtil;
 import com.tom.xshop.util.JSONUtil;
 import com.tom.xshop.util.LayoutUtil;
+
+
+
 
 
 
@@ -28,7 +35,9 @@ import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
+import android.widget.AbsListView;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
@@ -128,7 +137,6 @@ public class SlidingGalleryView extends RelativeLayout {
                 RelativeLayout.LayoutParams.MATCH_PARENT);
         
         mBanner.addView(mBannerBtn, toggleNaviBtnLP);
-        
         mBadge = new BadgeView(context, mBannerBtn);
         mBadge.setText("0");
 //        mBadge.setOnClickListener(new OnClickListener() {
@@ -181,7 +189,7 @@ public class SlidingGalleryView extends RelativeLayout {
 
 			@Override
 			public void notifyDataSetChanged() {
-				updateBannerStatus();
+				handleBannerStatus();
 			}
     		
     	});
@@ -311,7 +319,9 @@ public class SlidingGalleryView extends RelativeLayout {
         if (activity.getSupportFragmentManager().findFragmentByTag(curTag) == null)
         {
             final FragmentTransaction ft = activity.getSupportFragmentManager().beginTransaction();
-            ft.replace(id, new ImageGridFragment(category), curTag);
+            ImageGridFragment f = new ImageGridFragment(category);
+            f.setOnScrollStateChangedListener(mScrollListener);
+            ft.replace(id, f, curTag);
             ft.commit();
         }
     }
@@ -332,21 +342,47 @@ public class SlidingGalleryView extends RelativeLayout {
         }
     }
     
+
+    private int getLikedGoodsNum() {
+    	ArrayList<GoodsItem> list = GlobalData.getData().getGoodsListByCategory(GlobalData.FavoriteCategory);
+    	int count = list.size(); // need improve
+    	
+    	return count;
+    }
     
-    public void updateBannerStatus() {
+    private void updateBannerStatus() {
     	// update Banner visibility when start up
     	// if like goods is empty, then hide it.
     	// if not , then show banner
-    	ArrayList<GoodsItem> list = GlobalData.getData().getGoodsListByCategory(GlobalData.FavoriteCategory);
-    	int count = list.size(); // need improve
+    	int count = getLikedGoodsNum();
     	if(count <= 0) {
     		mBadge.hide();
-    		showBanner(false, false);
+    		mBanner.setVisibility(View.GONE);
     	} else {
     		mBadge.setText(Integer.toString(count));
     		mBadge.show();
-    		showBanner(true, false);
+    		mBanner.setVisibility(View.VISIBLE);
     	}
+    }
+    
+    
+    private void handleBannerStatus() {
+    	int count = getLikedGoodsNum();
+    	boolean showBanner = false;
+    	boolean useAnimation = false;
+    	if(count <= 0) {
+    		mBadge.setText("0");
+    		showBanner = false;
+    		useAnimation = (View.VISIBLE == mBanner.getVisibility());
+    	} else {
+    		mBadge.show();
+    		mBadge.setText(Integer.toString(count));
+    		showBanner = true;
+    		useAnimation = (View.VISIBLE != mBanner.getVisibility());
+    	}
+    	
+    	
+    	showBanner(showBanner, useAnimation);
     }
     
     
@@ -355,7 +391,28 @@ public class SlidingGalleryView extends RelativeLayout {
 			if (withAnim) {
 				Animation anim = AnimationUtils.loadAnimation(
 						this.getContext(), R.anim.push_up_in);
-				anim.setFillAfter(true);
+				//anim.setFillAfter(true);
+				anim.setAnimationListener(new AnimationListener() {
+
+					@Override
+					public void onAnimationEnd(Animation animation) {
+						// TODO Auto-generated method stub
+						mBanner.setVisibility(View.VISIBLE);
+					}
+
+					@Override
+					public void onAnimationRepeat(Animation animation) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void onAnimationStart(Animation animation) {
+						// TODO Auto-generated method stub
+						
+					}});
+				
+				mBanner.setVisibility(View.VISIBLE);
 				mBanner.startAnimation(anim);
 			} else {
 				mBanner.setVisibility(View.VISIBLE);
@@ -365,11 +422,46 @@ public class SlidingGalleryView extends RelativeLayout {
 			if (withAnim) {
 				Animation anim = AnimationUtils.loadAnimation(
 						this.getContext(), R.anim.push_up_out);
-				anim.setFillAfter(true);
+				//anim.setFillAfter(true);
+				anim.setAnimationListener(new AnimationListener() {
+
+					@Override
+					public void onAnimationEnd(Animation arg0) {
+						// TODO Auto-generated method stub
+						mBanner.clearFocus();
+						mBanner.setVisibility(View.GONE);
+					}
+
+					@Override
+					public void onAnimationRepeat(Animation animation) {
+						// TODO Auto-generated method stub
+						
+					}
+
+					@Override
+					public void onAnimationStart(Animation animation) {
+						// TODO Auto-generated method stub
+						
+					}});
+				
 				mBanner.startAnimation(anim);
+
 			} else {
-				mBanner.setVisibility(View.INVISIBLE);
+				mBanner.setVisibility(View.GONE);
 			}
 		}
 	}
+	
+	private OnScrollStateChangedListener mScrollListener = new OnScrollStateChangedListener() {
+
+		@Override
+		public void onScrollStateChanged(AbsListView absListView,
+				int scrollState) {
+			
+			if(scrollState == AbsListView.OnScrollListener.SCROLL_STATE_TOUCH_SCROLL) {
+				if(mBanner.getVisibility() == View.VISIBLE)
+					showBanner(false, true);
+			}
+			
+		}};
 }
