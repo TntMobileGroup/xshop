@@ -206,7 +206,7 @@ public class SlidingGalleryView extends RelativeLayout {
     
     private void getFromCloud()
     {
-        CloudAPIAsyncTask task = new CloudAPIAsyncTask("show", new CloudAPIAsyncTask.ICloudAPITaskListener() {
+        CloudAPIAsyncTask task = new CloudAPIAsyncTask("GetAllProductInfo", new CloudAPIAsyncTask.ICloudAPITaskListener() {
             
             @Override
             public void onFinish(int returnCode, String strResult) {
