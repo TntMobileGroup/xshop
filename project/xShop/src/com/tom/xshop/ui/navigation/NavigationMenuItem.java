@@ -2,6 +2,7 @@ package com.tom.xshop.ui.navigation;
 
 import com.tom.xshop.GalleryActivity;
 import com.tom.xshop.R;
+import com.tom.xshop.cloud.api.demo.APIDemoDialog;
 import com.tom.xshop.util.DensityAdaptor;
 import com.tom.xshop.util.LayoutUtil;
 import com.tom.xshop.util.UIConfig;
@@ -71,6 +72,10 @@ public class NavigationMenuItem extends RelativeLayout {
         {
             mIcon.setImageResource(R.drawable.question);
         }
+        else if (mText.equalsIgnoreCase("Cloud API Demo"))
+        {
+            mIcon.setImageResource(R.drawable.cloud);
+        }
         else
         {
             mIcon.setImageResource(R.drawable.like);
@@ -103,6 +108,10 @@ public class NavigationMenuItem extends RelativeLayout {
                 if (mText.startsWith("["))
                 {
                     Toast.makeText(v.getContext(), "Coming soon!", Toast.LENGTH_SHORT).show();
+                }
+                else if (mText.equalsIgnoreCase("Cloud API Demo"))
+                {
+                    APIDemoDialog.getInstance(v.getContext()).show();
                 }
                 else
                 {
