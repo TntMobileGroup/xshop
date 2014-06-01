@@ -6,6 +6,7 @@ import android.widget.RelativeLayout;
 
 public class APIDemoDialog extends Dialog {
 
+    public final static String APIDemoLabel = "Cloud API Demo";
     private RelativeLayout mContent = null;
 
     private static APIDemoDialog instance = null;

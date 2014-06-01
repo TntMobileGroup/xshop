@@ -2,6 +2,7 @@ package com.tom.xshop.ui.navigation;
 
 import java.util.ArrayList;
 
+import com.tom.xshop.cloud.api.demo.APIDemoDialog;
 import com.tom.xshop.data.GlobalData;
 import com.tom.xshop.ui.control.ControlFactory;
 import android.content.Context;
@@ -35,7 +36,7 @@ public class NavigationMenu extends ScrollView {
         ArrayList<String> categories = (ArrayList<String>) GlobalData.getData().getAllCategories().clone();
         categories.add(0, "[Help]");
         categories.add(1, "[Settings]");
-        categories.add(2, "Cloud API Demo");
+        categories.add(2, APIDemoDialog.APIDemoLabel);
         categories.add(3, "[Update]");
         categories.add("[About Us]");
         boolean isFirst = true;

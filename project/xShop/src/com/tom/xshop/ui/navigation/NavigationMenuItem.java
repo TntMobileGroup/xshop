@@ -72,7 +72,7 @@ public class NavigationMenuItem extends RelativeLayout {
         {
             mIcon.setImageResource(R.drawable.question);
         }
-        else if (mText.equalsIgnoreCase("Cloud API Demo"))
+        else if (mText.equalsIgnoreCase(APIDemoDialog.APIDemoLabel))
         {
             mIcon.setImageResource(R.drawable.cloud);
         }
@@ -109,7 +109,7 @@ public class NavigationMenuItem extends RelativeLayout {
                 {
                     Toast.makeText(v.getContext(), "Coming soon!", Toast.LENGTH_SHORT).show();
                 }
-                else if (mText.equalsIgnoreCase("Cloud API Demo"))
+                else if (mText.equalsIgnoreCase(APIDemoDialog.APIDemoLabel))
                 {
                     APIDemoDialog.getInstance(v.getContext()).show();
                 }
