@@ -48,7 +48,14 @@ public class NavigationMenuItem extends RelativeLayout {
         }
         return super.onTouchEvent(event);
     }
+    
+    public void setTitle(String title) {
+    	mText = title;
+    }
 
+    public String getTitle() {
+    	return mText;
+    }
 
     private void createUI(Context context)
     {

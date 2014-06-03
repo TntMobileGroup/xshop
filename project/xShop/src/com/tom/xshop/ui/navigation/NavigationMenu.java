@@ -5,13 +5,16 @@ import java.util.ArrayList;
 import com.tom.xshop.cloud.api.demo.APIDemoDialog;
 import com.tom.xshop.data.GlobalData;
 import com.tom.xshop.ui.control.ControlFactory;
+
 import android.content.Context;
+import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 
 public class NavigationMenu extends ScrollView {
 
     private LinearLayout mContent = null;
+    private View.OnClickListener mItemClickListener = null;
     
     public NavigationMenu(Context context) {
         super(context);
@@ -51,7 +54,15 @@ public class NavigationMenu extends ScrollView {
                 mContent.addView(ControlFactory.createHoriSeparatorForLinearLayout(
                         this.getContext()));
             }
-            mContent.addView(new NavigationMenuItem(context, category));
+            NavigationMenuItem item = new NavigationMenuItem(context, category);
+            if(mItemClickListener != null)
+            	item.setOnClickListener(mItemClickListener);
+            
+            mContent.addView(item);
         }
+    }
+    
+    public void setOnMenuItemClickListener(View.OnClickListener  listener) {
+    	mItemClickListener = listener;
     }
 }

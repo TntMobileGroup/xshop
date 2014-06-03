@@ -6,6 +6,7 @@ import com.tom.xshop.util.LayoutUtil;
 import com.tom.xshop.util.UIConfig;
 
 import android.content.Context;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -32,6 +33,12 @@ public class NavigationPanel extends RelativeLayout {
 	    }
 	}
 
+	public void setOnMenuItemClickListener(View.OnClickListener  listener) {
+		if(mMenuView != null) {
+			mMenuView.setOnMenuItemClickListener(listener);
+		}
+	}
+	
 	private void createUI(Context context)
 	{
 		this.setBackgroundResource(R.drawable.wood_bk);
