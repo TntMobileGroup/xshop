@@ -1,6 +1,7 @@
 
 package com.tom.xshop;
 
+import com.tom.xshop.cloud.api.demo.APIDemoDialog;
 import com.tom.xshop.config.PrefConfig;
 import com.tom.xshop.data.GlobalData;
 import com.tom.xshop.gallery.SlidingGalleryView;
@@ -84,7 +85,15 @@ public class GalleryActivity extends FragmentActivity {
     }
     
     
+    
 	@Override
+    protected void onDestroy() {
+        // TODO Auto-generated method stub
+        super.onDestroy();
+        APIDemoDialog.destroy();
+    }
+
+    @Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:

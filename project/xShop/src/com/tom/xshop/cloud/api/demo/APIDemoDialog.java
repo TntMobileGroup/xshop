@@ -26,6 +26,11 @@ public class APIDemoDialog extends Dialog {
         return instance;
     }
     
+    public static void destroy()
+    {
+        instance = null;
+    }
+    
     public APIDemoDialog(Context context) {
         super(context);
         initialize(context);
