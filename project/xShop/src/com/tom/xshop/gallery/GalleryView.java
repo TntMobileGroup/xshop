@@ -12,7 +12,6 @@ import com.tom.xshop.cloud.CloudAPIAsyncTask;
 import com.tom.xshop.data.GlobalData;
 import com.tom.xshop.data.GoodsDataChangeListener;
 import com.tom.xshop.data.GoodsItem;
-import com.tom.xshop.gallery.ui.OnScrollStateChangedListener;
 import com.tom.xshop.ui.thirdparty.ViewBadger.BadgeView;
 import com.tom.xshop.util.CacheUtil;
 import com.tom.xshop.util.JSONUtil;
@@ -20,18 +19,21 @@ import com.tom.xshop.util.LayoutUtil;
 
 
 
+
+
 import android.content.Context;
+import android.os.Build;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.animation.AnimationUtils;
 import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
-import android.widget.FrameLayout;
 import android.widget.RelativeLayout;
 
 
-public class GalleryView extends RelativeLayout {
+public class GalleryView extends RelativeLayout implements StickyListHeadersListView.OnStickyHeaderOffsetChangedListener{
     private ArrayList<String> mCategories = null;
     private RelativeLayout mBanner = null;
     private Button mBannerBtn = null;
@@ -110,6 +112,8 @@ public class GalleryView extends RelativeLayout {
         RelativeLayout.LayoutParams vpLP = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.MATCH_PARENT);
         //vpLP.topMargin = LayoutUtil.getGalleryTopPanelHeight();
+        stickyList.setOnStickyHeaderOffsetChangedListener(this);
+        stickyList.setOnScrollListener(mScrollListener);
         this.addView(stickyList, vpLP);
         
         createBottomBanner();
@@ -295,7 +299,8 @@ public class GalleryView extends RelativeLayout {
 		}
 	}
 	
-	private OnScrollStateChangedListener mScrollListener = new OnScrollStateChangedListener() {
+	
+	private OnScrollListener mScrollListener = new OnScrollListener() {
 
 		@Override
 		public void onScrollStateChanged(AbsListView absListView,
@@ -306,5 +311,22 @@ public class GalleryView extends RelativeLayout {
 					showBanner(false, true);
 			}
 			
+		}
+
+		@Override
+		public void onScroll(AbsListView view, int firstVisibleItem,
+				int visibleItemCount, int totalItemCount) {
+
 		}};
+
+
+	@Override
+	public void onStickyHeaderOffsetChanged(StickyListHeadersListView l,
+			View header, int offset) {
+       
+		if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            header.setAlpha(1 - (offset / (float) header.getMeasuredHeight()));
+        }
+		
+	}
 }
