@@ -187,7 +187,7 @@ public class GoodsItemDetailView extends LinearLayout {
                 mData.like(!mData.isLiked());
                 
                 GlobalData.getData().updateLikedList(true);
-                ImageGridFragment.updateFavoriteAdaptor();
+                //ImageGridFragment.updateFavoriteAdaptor();
             }
         });
     }

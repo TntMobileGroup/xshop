@@ -4,8 +4,10 @@ import com.tom.xshop.cloud.api.demo.APIDemoDialog;
 import com.tom.xshop.config.PrefConfig;
 import com.tom.xshop.data.GlobalData;
 import com.tom.xshop.gallery.GalleryView;
+import com.tom.xshop.gallery.ui.ImageListActivity;
 import com.tom.xshop.gallery.util.ImageCache;
 import com.tom.xshop.gallery.util.ImageFetcher;
+import com.tom.xshop.gallery.util.Utils;
 import com.tom.xshop.ui.navigation.NavigationMenuItem;
 import com.tom.xshop.ui.navigation.NavigationPanel;
 import com.tom.xshop.util.CacheUtil;
@@ -13,6 +15,7 @@ import com.tom.xshop.util.DensityAdaptor;
 import com.tom.xshop.util.PrefUtil;
 
 import android.app.ActionBar;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Build;
 import android.os.Bundle;
@@ -238,7 +241,18 @@ public class MainActivity extends FragmentActivity {
 							Toast.LENGTH_SHORT).show();
 				} else if (title.equalsIgnoreCase(APIDemoDialog.APIDemoLabel)) {
 					APIDemoDialog.getInstance(v.getContext()).show();
-				} else {
+				} else if(title.equalsIgnoreCase(GlobalData.FavoriteCategory)) {
+			        
+					GlobalData.getData().setCurCategory(GlobalData.FavoriteCategory);
+			        final Intent i = new Intent(MainActivity.this, ImageListActivity.class);
+			        i.putExtra(ImageListActivity.EXTRA_IMAGE, 0);
+			        if (Utils.hasJellyBean()) {
+			            MainActivity.this.startActivity(i);
+			        } else {
+			            startActivity(i);
+			        }
+				}
+				else {
 						mCenterView.scrollToCategory(title, false);
 				}
 			}

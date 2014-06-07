@@ -37,19 +37,19 @@
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize"
             android:label="@string/app_name" >
 
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            
         </activity>
         
         <activity
             android:name="com.tom.xshop.GalleryActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize"
             android:label="@string/app_name" >
-            
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
         </activity>
+        
         <activity
             android:name="com.tom.xshop.gallery.ui.ImageDetailActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize"
@@ -65,11 +65,11 @@
             android:name="com.tom.xshop.gallery.ui.ImageListActivity"
             android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|screenSize"
             android:label="@string/app_name"
-            android:parentActivityName=".ui.ImageGridActivity"
+            android:parentActivityName="com.tom.xshop.MainActivity"
             android:theme="@style/AppTheme" >
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value=".ui.ImageGridActivity" />
+                android:value="com.tom.xshop.MainActivity" />
         </activity>
         
                 <!-- 配置的第三方参数属性 -->

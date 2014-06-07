@@ -71,7 +71,7 @@ public class GalleryView extends RelativeLayout implements StickyListHeadersList
                 return;
             } else {
         		ArrayList<GoodsItem> list = GlobalData.getData().getGoodsListByCategory(mCategories.get(i));
-           	     selection += list.size(); // need improve
+           	     selection += list.size(); 
             }
         }
         
