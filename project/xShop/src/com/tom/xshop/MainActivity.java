@@ -28,6 +28,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.view.WindowManager;
@@ -90,6 +91,16 @@ public class MainActivity extends FragmentActivity {
         // prescribed interactions between a top-level sliding drawer and the action bar.
         mDrawerToggle = new ActionBarDrawerToggle(this, mDrawerLayout,
                 R.drawable.ic_drawer, R.string.drawer_open, R.string.drawer_close);
+        
+        mCenterView.getBanner().setOnClickListener(new OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+
+				startFavorActivity();
+			}
+        	
+        });
     }
     
     public NavigationPanel getNavigationPanel()
@@ -213,7 +224,7 @@ public class MainActivity extends FragmentActivity {
 
     private void setWindowStyle() {
         //requestWindowFeature(Window.FEATURE_PROGRESS);
-        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
+//        getWindow().requestFeature(Window.FEATURE_ACTION_BAR);
         //getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
         //getWindow().requestFeature(Window.FEATURE_NO_TITLE);
         //getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -225,6 +236,16 @@ public class MainActivity extends FragmentActivity {
     }
     
     
+    private void startFavorActivity() {
+		GlobalData.getData().setCurCategory(GlobalData.FavoriteCategory);
+        final Intent i = new Intent(MainActivity.this, ImageListActivity.class);
+        i.putExtra(ImageListActivity.EXTRA_IMAGE, 0);
+        if (Utils.hasJellyBean()) {
+            MainActivity.this.startActivity(i);
+        } else {
+            startActivity(i);
+        }
+    }
     
 	private class XShopMenItemClickListener implements View.OnClickListener {
 
@@ -243,14 +264,7 @@ public class MainActivity extends FragmentActivity {
 					APIDemoDialog.getInstance(v.getContext()).show();
 				} else if(title.equalsIgnoreCase(GlobalData.FavoriteCategory)) {
 			        
-					GlobalData.getData().setCurCategory(GlobalData.FavoriteCategory);
-			        final Intent i = new Intent(MainActivity.this, ImageListActivity.class);
-			        i.putExtra(ImageListActivity.EXTRA_IMAGE, 0);
-			        if (Utils.hasJellyBean()) {
-			            MainActivity.this.startActivity(i);
-			        } else {
-			            startActivity(i);
-			        }
+					startFavorActivity();
 				}
 				else {
 						mCenterView.scrollToCategory(title, false);

@@ -114,6 +114,7 @@ public class ImageListActivity extends FragmentActivity {
             setActionBarTranslation(-actionBarHeight);//will "hide" an ActionBar
         }
         
+        this.getActionBar().setBackgroundDrawable(this.getResources().getDrawable(R.drawable.actionbar_bkg));
     }
     
     @Override

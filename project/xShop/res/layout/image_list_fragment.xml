@@ -16,13 +16,13 @@
         sothree:paralaxOffset="100dp"
         sothree:dragView="@+id/name">
 
-        <!-- MAIN CONTENT -->
+        <!-- MAIN CONTENT  android:dividerHeight="10dip" -->
      	<ListView android:id="@id/android:list"
                android:layout_width="match_parent"
                android:layout_height="match_parent"
-               android:background="#fff3f3f3"
+               android:background="#ffffffff"
                android:layout_weight="1"
-               android:dividerHeight="10dip"
+              
                android:drawSelectorOnTop="false"
                android:paddingTop="?android:attr/actionBarSize"/>
 

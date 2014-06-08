@@ -82,6 +82,11 @@ public class GalleryView extends RelativeLayout implements StickyListHeadersList
     }
   
     
+    public View getBanner() {
+    	return mBannerBtn;
+    }
+    
+    
     private void createBottomBanner() {
         Context context = this.getContext();
         mBanner = new RelativeLayout(context);
@@ -103,7 +108,7 @@ public class GalleryView extends RelativeLayout implements StickyListHeadersList
         mBanner.addView(mBannerBtn, toggleNaviBtnLP);
         mBadge = new BadgeView(context, mBannerBtn);
         mBadge.setText("0");
- 
+      
     }
 
     private void createUI()
