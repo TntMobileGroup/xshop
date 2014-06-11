@@ -90,6 +90,7 @@ public class StickyListViewAdapter extends BaseAdapter implements
             itemView = (GoodsItemDetailView) convertView;
         }
 
+        itemView.setUIMode(GoodsItemDetailView.MODE_SHOW);
         SlideViewAdapter adapter = new SlideViewAdapter(position);
         
         GoodsItem data = mGoodsList.get(position);

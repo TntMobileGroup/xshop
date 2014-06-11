@@ -47,6 +47,7 @@ import android.view.Window;
 import android.view.View.OnClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -57,6 +58,7 @@ import android.widget.TextView;
 public class ImageListActivity extends FragmentActivity {
     private static final String IMAGE_CACHE_DIR = "images";
     public static final String EXTRA_IMAGE = "extra_image";
+    public static final String EXTRA_ORDER = "extra_order";
     private static ArrayList<GoodsItem> mGoodsList = null;
     private static ImageFetcher mImageFetcher;
     
@@ -68,13 +70,28 @@ public class ImageListActivity extends FragmentActivity {
         return mImageFetcher;
     }
 	
-    @Override
+    @SuppressWarnings("unchecked")
+	@Override
     protected void onCreate(Bundle savedInstanceState) {
     	
-    	mGoodsList = GlobalData.getData().getGoodsListByCategory(GlobalData.getData().getCurCategory());
+    	ArrayList<GoodsItem> goodsList = GlobalData.getData().getGoodsListByCategory(GlobalData.getData().getCurCategory());
+    	mGoodsList = (ArrayList<GoodsItem>) goodsList.clone();
         super.onCreate(savedInstanceState);
         
         getWindow().requestFeature(Window.FEATURE_ACTION_BAR_OVERLAY);
+        
+        for(int index = 0; index < mGoodsList.size(); index++) {
+        	mGoodsList.get(index).pick(false);
+        }
+        
+        boolean orderLast = this.getIntent().getBooleanExtra(EXTRA_ORDER, false);
+        if(orderLast) {
+        	
+        	int orderItem = this.getIntent().getIntExtra(EXTRA_IMAGE, -1);
+        	if((mGoodsList.size() > orderItem) && orderItem >= 0) {
+        		mGoodsList.get(orderItem).pick(true);
+        	}
+        }
         
         // Fetch screen height and width, to use as our max size when loading images as this
         // activity runs full screen
@@ -166,14 +183,15 @@ public class ImageListActivity extends FragmentActivity {
 
     public  class ArrayListFragment extends ListFragment {
 
+    	private int orderItem = -1;
+    	
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
             
             setListAdapter(new ListAdapter());
-            
-            int extraCurrentItem = this.getActivity().getIntent().getIntExtra(EXTRA_IMAGE, -1);
-            this.setSelection(extraCurrentItem);
+                        
+            this.setSelection(orderItem);
         }
 
         @Override
@@ -229,8 +247,30 @@ public class ImageListActivity extends FragmentActivity {
                         startActivity(i);
                     }
                 });
+                
+                GridLayout grid = (GridLayout) view.findViewById(R.id.goods);
+                orderItem = this.getActivity().getIntent().getIntExtra(EXTRA_IMAGE, -1);
+                if(orderItem < 0)
+                	orderItem = 0;
+                
+                if(mGoodsList.size() > orderItem)
+                	grid.addView(getGridItemView(orderItem));
+                
                 return view;  
-        } 
+        }
+        
+        
+        private View getGridItemView(int position) {
+        	
+            GoodsItemDetailView itemView = new GoodsItemDetailView(this.getActivity());
+            itemView.setUIMode(GoodsItemDetailView.MODE_ORDER);
+            SlideViewAdapter adapter = new SlideViewAdapter(position);
+            
+            GoodsItem data = mGoodsList.get(position);
+            itemView.setDataWithAdapter(data, adapter);
+            
+            return itemView;
+        }
     }
     
     public  class ListAdapter extends BaseAdapter {
@@ -268,10 +308,13 @@ public class ImageListActivity extends FragmentActivity {
                 itemView = (GoodsItemDetailView) convertView;
             }
     
+            itemView.setUIMode(GoodsItemDetailView.MODE_PICK);
+            
             SlideViewAdapter adapter = new SlideViewAdapter(position);
             
             GoodsItem data = mGoodsList.get(position);
             itemView.setDataWithAdapter(data, adapter);
+            
             
             return itemView;
 		}

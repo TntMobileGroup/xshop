@@ -11,7 +11,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:gravity="bottom"
-        sothree:panelHeight="68dp"
+        sothree:panelHeight="48dp"
         sothree:shadowHeight="4dp"
         sothree:paralaxOffset="100dp"
         sothree:dragView="@+id/name">
@@ -37,7 +37,7 @@
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="68dp"
+                android:layout_height="48dp"
                 android:orientation="horizontal">
 
                 <TextView
@@ -60,12 +60,13 @@
 
             </LinearLayout>
 
-            <ImageView
+            <GridLayout
+                android:id="@+id/goods"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                android:src="@drawable/ic_launcher" >
-            </ImageView>
+                android:columnCount="2" >
+            </GridLayout>
         </LinearLayout>
     </com.tom.xshop.ui.thirdparty.SlidingUpPanel.SlidingUpPanelLayout>
 

@@ -8,6 +8,8 @@ public class PrefConfig {
     public final static String Key_GoodsUUID = "goods_uuid";
     public final static String Key_EventTitle = "event_title";
     public final static String Key_EventMessage = "event_message";
+    
+    public final static String KEY_LastLikeGoods = "lastlikegoods";
 
     public static HashMap<String, Object> prefConfigMap = new HashMap<String, Object>();
 
@@ -16,5 +18,6 @@ public class PrefConfig {
         prefConfigMap.put(Key_CurClientID, "");
         prefConfigMap.put(Key_GoodsUUID, "");
         prefConfigMap.put(Key_EventMessage, "");
+        prefConfigMap.put(KEY_LastLikeGoods, "");
     }
 }

@@ -20,6 +20,8 @@ public class GoodsItem {
     private boolean mLiked = false;
     private boolean mFocus = false;
 
+    private ItemOrderData mOrderData = null;
+    
     public GoodsItem(JSONObject jsonObj) throws JSONException
     {
         mId = jsonObj.getString("id");
@@ -92,7 +94,11 @@ public class GoodsItem {
     public void like(boolean like)
     {
         mLiked = like;
+        if(mOrderData == null) {
+        	mOrderData = new ItemOrderData();
+        }
     }
+    
     
     public boolean isLiked()
     {
@@ -107,5 +113,39 @@ public class GoodsItem {
     public void setMessage(String message)
     {
         mMessage = message;
+    }
+    
+    
+    public boolean isPicked() {
+    	if(!isLiked())
+    		return false;
+    	
+    	if(mOrderData == null)
+    		return false;
+    	
+    	return mOrderData.isPicked();
+    }
+    
+    
+    public void pick(boolean pick) {
+    	if(mOrderData != null) {
+    		mOrderData.pick(pick);
+    	}
+    }
+    
+    
+    public int getOrderNumber() {
+    	if(mOrderData != null) {
+    		return mOrderData.getOrderNumber();
+    	}
+    	
+    	return 0;
+    }
+    
+    
+    public void setOrderNumber(int number) {
+    	if(mOrderData != null) {
+    		mOrderData.setOrderNumber(number);
+    	}
     }
 }

@@ -1,8 +1,11 @@
 package com.tom.xshop;
 
+import java.util.ArrayList;
+
 import com.tom.xshop.cloud.api.demo.APIDemoDialog;
 import com.tom.xshop.config.PrefConfig;
 import com.tom.xshop.data.GlobalData;
+import com.tom.xshop.data.GoodsItem;
 import com.tom.xshop.gallery.GalleryView;
 import com.tom.xshop.gallery.ui.ImageListActivity;
 import com.tom.xshop.gallery.util.ImageCache;
@@ -97,7 +100,7 @@ public class MainActivity extends FragmentActivity {
 			@Override
 			public void onClick(View v) {
 
-				startFavorActivity();
+				startFavorActivity(true);
 			}
         	
         });
@@ -236,10 +239,25 @@ public class MainActivity extends FragmentActivity {
     }
     
     
-    private void startFavorActivity() {
+    private void startFavorActivity(boolean selectLastLikeGoods) {
+    	int selection = 0;
+    	if(!selectLastLikeGoods) {
+    		selection = 0;
+    	} else {
+    		selection = -1;
+    		String id = PrefUtil.getStringValue(PrefConfig.KEY_LastLikeGoods);
+    		ArrayList<GoodsItem> list = GlobalData.getData().getLikedList();
+    		for(int index = 0; index < list.size(); index++) {
+    			if(list.get(index).getId().equalsIgnoreCase(id)){
+    				selection = index;
+    			}
+    		}
+    	}
+    	
 		GlobalData.getData().setCurCategory(GlobalData.FavoriteCategory);
         final Intent i = new Intent(MainActivity.this, ImageListActivity.class);
-        i.putExtra(ImageListActivity.EXTRA_IMAGE, 0);
+        i.putExtra(ImageListActivity.EXTRA_IMAGE, selection);
+        i.putExtra(ImageListActivity.EXTRA_ORDER, selectLastLikeGoods);
         if (Utils.hasJellyBean()) {
             MainActivity.this.startActivity(i);
         } else {
@@ -264,7 +282,7 @@ public class MainActivity extends FragmentActivity {
 					APIDemoDialog.getInstance(v.getContext()).show();
 				} else if(title.equalsIgnoreCase(GlobalData.FavoriteCategory)) {
 			        
-					startFavorActivity();
+					startFavorActivity(false);
 				}
 				else {
 						mCenterView.scrollToCategory(title, false);
