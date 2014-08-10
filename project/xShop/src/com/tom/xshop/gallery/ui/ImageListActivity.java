@@ -24,6 +24,7 @@ import com.tom.xshop.data.GlobalData;
 import com.tom.xshop.data.GoodsItem;
 import com.tom.xshop.gallery.util.ImageCache;
 import com.tom.xshop.gallery.util.ImageFetcher;
+import com.tom.xshop.order.OrderManager;
 import com.tom.xshop.ui.thirdparty.SlidingUpPanel.SlidingUpPanelLayout;
 import com.tom.xshop.ui.thirdparty.SlidingUpPanel.SlidingUpPanelLayout.PanelSlideListener;
 
@@ -34,6 +35,7 @@ import android.support.v4.view.ViewPager;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.content.Intent;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -184,13 +186,24 @@ public class ImageListActivity extends FragmentActivity {
     public  class ArrayListFragment extends ListFragment {
 
     	private int orderItem = -1;
+    	private ListView mOrderList = null;
     	
         @Override
         public void onActivityCreated(Bundle savedInstanceState) {
             super.onActivityCreated(savedInstanceState);
             
             setListAdapter(new ListAdapter());
-                        
+            
+            if(mOrderList != null) {
+            	 //TODO: to be replaced.
+            	mOrderList.setAdapter(null);
+            }
+            
+            mOrderList.setAdapter(OrderManager.Instance().getInquiryListAdapter());
+            orderItem = this.getActivity().getIntent().getIntExtra(EXTRA_IMAGE, -1);
+            if(orderItem < 0)
+          	orderItem = 0;
+                                
             this.setSelection(orderItem);
         }
 
@@ -248,29 +261,32 @@ public class ImageListActivity extends FragmentActivity {
                     }
                 });
                 
-                GridLayout grid = (GridLayout) view.findViewById(R.id.goods);
-                orderItem = this.getActivity().getIntent().getIntExtra(EXTRA_IMAGE, -1);
-                if(orderItem < 0)
-                	orderItem = 0;
                 
-                if(mGoodsList.size() > orderItem)
-                	grid.addView(getGridItemView(orderItem));
+                mOrderList = (ListView) view.findViewById(R.id.goods);
+//                GridLayout grid = (GridLayout) view.findViewById(R.id.goods);
+//                grid.setBackgroundColor(Color.GREEN);
+//                orderItem = this.getActivity().getIntent().getIntExtra(EXTRA_IMAGE, -1);
+//                if(orderItem < 0)
+//                	orderItem = 0;
+//                
+//                if(mGoodsList.size() > orderItem)
+//                	grid.addView(getGridItemView(orderItem));
                 
                 return view;  
         }
         
         
-        private View getGridItemView(int position) {
-        	
-            GoodsItemDetailView itemView = new GoodsItemDetailView(this.getActivity());
-            itemView.setUIMode(GoodsItemDetailView.MODE_ORDER);
-            SlideViewAdapter adapter = new SlideViewAdapter(position);
-            
-            GoodsItem data = mGoodsList.get(position);
-            itemView.setDataWithAdapter(data, adapter);
-            
-            return itemView;
-        }
+//        private View getGridItemView(int position) {
+//        	
+//            GoodsItemDetailView itemView = new GoodsItemDetailView(this.getActivity());
+//            itemView.setUIMode(GoodsItemDetailView.MODE_ORDER);
+//            SlideViewAdapter adapter = new SlideViewAdapter(position);
+//            
+//            GoodsItem data = mGoodsList.get(position);
+//            itemView.setDataWithAdapter(data, adapter);
+//            
+//            return itemView;
+//        }
     }
     
     public  class ListAdapter extends BaseAdapter {
@@ -310,9 +326,8 @@ public class ImageListActivity extends FragmentActivity {
     
             itemView.setUIMode(GoodsItemDetailView.MODE_PICK);
             
-            SlideViewAdapter adapter = new SlideViewAdapter(position);
-            
             GoodsItem data = mGoodsList.get(position);
+            SlideViewAdapter adapter = new SlideViewAdapter(data.getUuid());
             itemView.setDataWithAdapter(data, adapter);
             
             
@@ -323,15 +338,13 @@ public class ImageListActivity extends FragmentActivity {
     
     
     
-    public  class SlideViewAdapter extends PagerAdapter {
+    public static class SlideViewAdapter extends PagerAdapter {
 
-    	private int mPosition;
     	private GoodsItem data;
-        public SlideViewAdapter(int position) {
+        public SlideViewAdapter(String itemId) {
             super();
             
-            mPosition = position;
-            data = mGoodsList.get(mPosition);
+            data = GlobalData.getData().getGoodsItem(itemId);
         }
 
         @Override
@@ -350,18 +363,12 @@ public class ImageListActivity extends FragmentActivity {
           RecyclingImageView itemView = new RecyclingImageView(container.getContext());
           ((ViewPager) container).addView(itemView);
           
-          if(position == 1)
+          if(position == 0)
           {
-              GoodsItem data = mGoodsList.get(position);
               String url = data.getFullImageUrl();
               mImageFetcher.loadImage(url, itemView);
           }
-          else
-          {
-          GoodsItem data = mGoodsList.get(mPosition);
-          String url = data.getFullImageUrl();
-          mImageFetcher.loadImage(url, itemView);
-          }
+
           return itemView;
         }
          

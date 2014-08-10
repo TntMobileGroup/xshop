@@ -90,12 +90,15 @@ public class GoodsItem {
         return mFullImageUrl;
     }
     
+    public ItemOrderData getItemOrderData() {
+    	return mOrderData;
+    }
     
     public void like(boolean like)
     {
         mLiked = like;
         if(mOrderData == null) {
-        	mOrderData = new ItemOrderData();
+        	mOrderData = new ItemOrderData(mUuid);
         }
     }
     

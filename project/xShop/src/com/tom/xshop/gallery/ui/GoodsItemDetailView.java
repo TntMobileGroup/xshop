@@ -6,6 +6,8 @@ import com.tom.xshop.R;
 import com.tom.xshop.config.PrefConfig;
 import com.tom.xshop.data.GlobalData;
 import com.tom.xshop.data.GoodsItem;
+import com.tom.xshop.order.OrderManager;
+import com.tom.xshop.order.Order;
 import com.tom.xshop.util.DensityAdaptor;
 import com.tom.xshop.util.PrefUtil;
 import com.tom.xshop.util.UIConfig;
@@ -327,16 +329,21 @@ public class GoodsItemDetailView extends LinearLayout {
 
 				if (MODE_PICK == mUIMode) {
 					mData.pick(arg1);
-
+				
 					if (arg1) {
 						
 						likeIt();
 						
 						mChangeGoodsNum.setVisibility(View.VISIBLE);
 						mLikeImageView.setVisibility(View.INVISIBLE);
+						
+						OrderManager.Instance().notifyOrderDataChanged(Order.ORDER_GOODSITEM_ADD, mData.getUuid());
 					} else {
 						mChangeGoodsNum.setVisibility(View.INVISIBLE);
 						mLikeImageView.setVisibility(View.VISIBLE);
+						
+						OrderManager.Instance().notifyOrderDataChanged(Order.ORDER_GOODSITEM_REMOVE, mData.getUuid());
+						
 					}
 				}
 			}
@@ -349,7 +356,7 @@ public class GoodsItemDetailView extends LinearLayout {
 				
 				 mData.setOrderNumber(mData.getOrderNumber() + 1);
 				 mCurNumber.setText(Integer.toString(mData.getOrderNumber()));
-				
+				 OrderManager.Instance().notifyOrderDataChanged(Order.ORDER_GOODSITEM_ORDERNUMBER_CHANGED, mData.getUuid());
 			}
         	
         });
@@ -365,6 +372,7 @@ public class GoodsItemDetailView extends LinearLayout {
 				 
 				 mData.setOrderNumber(number);
 				 mCurNumber.setText(Integer.toString(mData.getOrderNumber()));
+				 OrderManager.Instance().notifyOrderDataChanged(Order.ORDER_GOODSITEM_ORDERNUMBER_CHANGED, mData.getUuid());
 			}
         	
         });

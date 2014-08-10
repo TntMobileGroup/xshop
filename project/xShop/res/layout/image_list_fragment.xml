@@ -60,13 +60,12 @@
 
             </LinearLayout>
 
-            <GridLayout
+            <ListView
                 android:id="@+id/goods"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:columnCount="2" >
-            </GridLayout>
+                android:layout_weight="1">
+            </ListView>
         </LinearLayout>
     </com.tom.xshop.ui.thirdparty.SlidingUpPanel.SlidingUpPanelLayout>
 

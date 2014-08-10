@@ -139,6 +139,18 @@ public class GlobalData {
         return getGoodsListByCategory(FavoriteCategory);
     }
     
+    
+    public GoodsItem getGoodsItem(String uuid) {
+        for (GoodsItem item : mAllGoodsList)
+        {
+            if (item.getUuid().equalsIgnoreCase(uuid))
+            {
+            	return item;
+            }
+         }
+        
+        return null;
+    }
 //    public String getFavoriteData()
 //    {
 //        String data = "";
